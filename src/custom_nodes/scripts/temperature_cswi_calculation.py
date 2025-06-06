@@ -65,7 +65,7 @@ class Calculator(Node):
                 if self.H is None or self.H.shape[1] != 1280:
                     self.get_logger().info("Loading 1280 homography matrix.")
                     try:
-                        self.H = np.loadtxt(os.path.expanduser("~/sensors_ws/src/custom_nodes/Homography/average_homography2.txt"))
+                        self.H = np.loadtxt(os.path.expanduser("~/sensors_ws/src/custom_nodes/Homography/average_homography_1280.txt"))
                     except Exception as e:
                         self.get_logger().error(f"Failed to load 1280 homography matrix: {e}")
             elif width == 640:
