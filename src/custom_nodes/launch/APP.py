@@ -1,9 +1,9 @@
 from nodos.NodeLauncher import NodeLauncher
 from nodos.NodeOptions import NodeOptions
-from nodos import CalculationOptions, RealsenseOptions, ThermalCameraOptions, YOLOOptions, NDVIOptions
-
+from nodos import CalculationOptions, RealsenseOptions, ThermalCameraOptions, YOLOOptions, NDVIOptions, AreaSegmentationOptions, BiomassOptions, GPSCoordinatesOptions
 import tkinter as tk
 from tkinter import ttk
+import os
 
 class ROS2App:
     def __init__(self, root):
@@ -12,7 +12,7 @@ class ROS2App:
         self.root.geometry("1400x900")
         script_dir = os.path.dirname(os.path.abspath(__file__))
         ruta_tcl = os.path.join(script_dir, "azure.tcl")
-        root.tk.call("source", ruta_tcl)
+        root.tk.call("source",ruta_tcl)
         root.tk.call("set_theme", "light")
 
         # Define el estilo de botón pequeño
@@ -31,9 +31,10 @@ class ROS2App:
         self.notebook.add(self.main_tab, text="Detection, Temperature and CSWI")
         self.create_main_tab_widgets()
 
-        self.NDVI_tab = ttk.Frame(self.notebook)
-        self.notebook.add(self.NDVI_tab , text="NDVI")
-        self.create_NDVI_tab_widgets()
+        self.extras_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.extras_tab , text="NDVI, Area Segmentation and Biomass")
+        self.create_extras_tab_widgets()
+        
 
     def create_main_tab_widgets(self):
         # Nodo Realsense
@@ -51,18 +52,36 @@ class ROS2App:
         self.calculation_launcher = NodeLauncher(
             self.main_tab, title="Temperature and CSWI", options=CalculationOptions(self.yolo_launcher.options)
         )
-
-    def create_NDVI_tab_widgets(self):
+ 
+        
+    def create_extras_tab_widgets(self):
         print("prueba")
         self.NDVI_launcher = NodeLauncher(
-            self.NDVI_tab, title="NVDIA", options=NDVIOptions()
+            self.extras_tab, title="NVDI", options=NDVIOptions()
         )
+
+        self.extras_launcher = NodeLauncher(
+            self.extras_tab, title="Area Segmentation", options=AreaSegmentationOptions()
+        )
+      
+        self.extras_launcher = NodeLauncher(
+            self.extras_tab, title="Biomass Calculation", options=BiomassOptions()
+        )    
+        
+        self.extras_launcher = NodeLauncher(
+            self.extras_tab, title="GPS Coordinates", options=GPSCoordinatesOptions()
+        )    
+    
+    #### Posar aqui options per la biomass calculation
+    
+        
     def on_closing(self):
         """Acciones al cerrar la aplicación."""
         self.realsense_launcher.stop_node()
         self.thermalcamera_launcher.stop_node()
         self.yolo_launcher.stop_node()
         self.calculation_launcher.stop_node()
+        
 
 
         thermal_camera_options = self.thermalcamera_launcher.options

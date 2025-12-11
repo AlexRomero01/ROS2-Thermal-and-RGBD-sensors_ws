@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
+from std_msgs.msg import String
 from ultralytics_ros.msg import YoloResult
 import cv2
 from cv_bridge import CvBridge
@@ -30,6 +31,7 @@ class Calculator(Node):
         # Publicadores bajo el tópico general 'Temperature_and_CSWI'
         base_topic = 'Temperature_and_CSWI'
         self.rescaled_image_publisher = self.create_publisher(Image, f'/{base_topic}/rescaled_rgb', 10)
+        self.text_publisher = self.create_publisher(String, f'/{base_topic}/text', 10)
         self.rescaled_masks_publisher = self.create_publisher(Image, f'/{base_topic}/rescaled_yolo_masks', 10)
         self.masked_image_with_temperature_publisher = self.create_publisher(Image, f'/{base_topic}/masked_image_with_temperature', 10)
 
@@ -65,7 +67,7 @@ class Calculator(Node):
                 if self.H is None or self.H.shape[1] != 1280:
                     self.get_logger().info("Loading 1280 homography matrix.")
                     try:
-                        self.H = np.loadtxt(os.path.expanduser("~/sensors_ws/src/custom_nodes/Homography/average_homography_1280.txt"))
+                        self.H = np.loadtxt(os.path.expanduser("~/sensors_ws/src/custom_nodes/Homography/average_homography2.txt"))
                     except Exception as e:
                         self.get_logger().error(f"Failed to load 1280 homography matrix: {e}")
             elif width == 640:
@@ -166,7 +168,10 @@ class Calculator(Node):
                 self.masked_image_with_temperature_publisher.publish(masked_image_msg)
 
                 for idx, (temp, cwsi) in enumerate([(p[1], p[2]) for p in person_temperatures]):
-                    self.get_logger().info(f"Persona {idx + 1}: Temperatura = {temp:.2f} °C, CSWI = {cwsi:.2f}")
+                    msg_text = String()
+                    msg_text.data = f" Objeto {idx + 1}: Temperatura = {temp:.2f} °C, CSWI = {cwsi:.2f}"
+                    self.text_publisher.publish(msg_text)
+                    self.get_logger().info(f"Objeto {idx + 1}: Temperatura = {temp:.2f} °C, CSWI = {cwsi:.2f}")
 
 
     def add_temperature_and_cwsi_to_image(self, image, mask, temperature, cwsi, color):

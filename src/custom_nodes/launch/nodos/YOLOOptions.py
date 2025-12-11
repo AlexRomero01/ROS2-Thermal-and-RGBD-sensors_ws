@@ -10,7 +10,7 @@ class YOLOOptions(NodeOptions):
         self.selected_model_name = tk.StringVar(value="yolov8n-seg.pt")  # Nombre del modelo YOLO
         self.selected_classes = []  # Lista de clases seleccionadas
         self.select_all_classes = tk.BooleanVar(value=False)  # Opción "Todos"
-        self.available_models = ["COCO", "Custom"]  # Lista de modelos disponibles
+        self.available_models = ["COCO", "Maybe enciam", "Maybe enciam v2","leaves","PV pannels", "model SYMBIOSYST"]  # Lista de modelos disponibles
         self.coco_classes = {
             0: "person", 1: "bicycle", 2: "car", 3: "motorcycle", 4: "airplane", 5: "bus", 6: "train",
             7: "truck", 8: "boat", 9: "traffic light", 10: "fire hydrant", 11: "stop sign", 12: "parking meter",
@@ -66,13 +66,49 @@ class YOLOOptions(NodeOptions):
 
     def on_model_selected(self, event):
         """Callback al seleccionar un modelo."""
-        model = self.selected_model.get()
+        model = self.selected_model.get()                  
         if model == "COCO":
             self.selected_model_name.set("yolov8n-seg.pt")
             self.update_class_listbox(self.coco_classes)
-        elif model == "Custom":
-            self.selected_model_name.set("custom_model_name.pt")
-            custom_classes = {0: "custom_class_1", 1: "custom_class_2", 2: "custom_class_3"}  # Ejemplo
+        elif model == "Maybe enciam":
+            self.selected_model_name.set("experiment-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "Maybe enciam v2":
+            self.selected_model_name.set("experiment_v2-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "leaves":
+            self.selected_model_name.set("best-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "PV pannels":
+            self.selected_model_name.set("junction_box_best-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "model SYMBIOSYST":
+            self.selected_model_name.set("General_Plants_19_06-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "Custom 6":
+            self.selected_model_name.set("name-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "Custom 7":
+            self.selected_model_name.set("name-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "Custom 8":
+            self.selected_model_name.set("name-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "Custom 9":
+            self.selected_model_name.set("name-seg.pt")
+            custom_classes = {0: "plant"}
+            self.update_class_listbox(custom_classes)
+        elif model == "Custom 10":
+            self.selected_model_name.set("name-seg.pt")
+            custom_classes = {0: "plant"}
             self.update_class_listbox(custom_classes)
         else:
             self.selected_model_name.set("None")

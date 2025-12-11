@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from nodos import NodeOptions, CalculationOptions, RealsenseOptions, ThermalCameraOptions, YOLOOptions
+from nodos import NodeOptions, CalculationOptions, RealsenseOptions, ThermalCameraOptions, YOLOOptions, NDVIOptions, AreaSegmentationOptions
 import subprocess
 import signal
 import os
@@ -61,6 +61,9 @@ class NodeLauncher:
 
         elif isinstance(self.options, CalculationOptions):
             return f"python3 ~/sensors_ws/src/custom_nodes/scripts/temperature_cswi_calculation.py"
+        
+        elif isinstance(self.options, NDVIOptions):
+            return f"ros2 launch ndvi_sensor ndvi_sensor_v2.launch.py ndvi_process:={self.options.selected_model_name.get()}"
     
     def launch_node(self):
         if self.terminal_process and self.terminal_process.poll() is None:
@@ -85,7 +88,12 @@ class NodeLauncher:
             if self.options.color_range_active.get():
                 print("El checkbox Color Range está activado. Lanzando nodo ColorConvert.")
                 self.options.launch_colorconvert_node()
-
+                
+        if getattr(self.options, "internal_node", False):
+                self.options.start()
+                return
+        
+        
     def stop_node(self):
         if self.terminal_process:
             try:
@@ -102,6 +110,10 @@ class NodeLauncher:
         if isinstance(self.options, ThermalCameraOptions):
             self.options.node_active.set(False)
             self.options.stop_colorconvert_node()
+            
+        if getattr(self.options, "internal_node", False):
+                self.options.stop()
+                return
 
     def copy_terminal_output(self):
         """Copia el contenido de la terminal del nodo actual al portapapeles."""

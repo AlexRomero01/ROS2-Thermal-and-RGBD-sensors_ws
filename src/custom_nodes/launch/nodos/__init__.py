@@ -4,3 +4,6 @@ from .RealsenseOptions import RealsenseOptions
 from .ThermalCameraOptions import ThermalCameraOptions
 from .YOLOOptions import YOLOOptions
 from .NDVIOptions import NDVIOptions
+from .AreaSegmentationOptions import AreaSegmentationOptions
+from .BiomassOptions import BiomassOptions
+from .GPSCoordinatesOptions import GPSCoordinatesOptions
